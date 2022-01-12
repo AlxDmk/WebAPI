@@ -1,6 +1,7 @@
 using System;
+using System.Collections.Generic;
 
-namespace WebAPI
+namespace WebAPI.Models
 {
     public class WeatherForecast
     {
@@ -10,6 +11,8 @@ namespace WebAPI
 
         public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
 
-        public string Summary { get; set; }
+        public string Summary { get; set; }       
+        
+        
     }
 }
