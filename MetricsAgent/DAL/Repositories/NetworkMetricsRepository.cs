@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Linq;
+using Core.DAL.Interfaces;
 using Dapper;
-using MetricsAgent.DAL.Interfaces;
-using MetricsAgent.Models;
+using MetricsAgent.DAL.Models;
 
 namespace MetricsAgent.DAL.Repositories
 {

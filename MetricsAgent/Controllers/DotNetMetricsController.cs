@@ -2,10 +2,14 @@
 using Microsoft.AspNetCore.Routing;
 using System;
 using System.Collections.Generic;
+using AutoMapper;
+using Core.DAL.Interfaces;
 using MetricsAgent.DAL;
-using MetricsAgent.Models;
+using MetricsAgent.DAL.Models;
 using MetricsAgent.Requests;
 using MetricsAgent.Responses;
+using MetricsAgent.Responses.Models;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace MetricsAgent.Controllers
@@ -17,11 +21,13 @@ namespace MetricsAgent.Controllers
     {
         private readonly ILogger<DotNetMetricsController> _logger;
         private readonly IRepository<DotNetMetric> _repository;
+        private  readonly IMapper _mapper;
 
-        public DotNetMetricsController(ILogger<DotNetMetricsController> logger, IRepository<DotNetMetric> repository)
+        public DotNetMetricsController(ILogger<DotNetMetricsController> logger, IRepository<DotNetMetric> repository, IMapper mapper)
         {
             _logger = logger;
             _repository = repository;
+            _mapper = mapper;
         }
         [HttpGet("from/{fromTime}/to/{toTime}")]
         public IActionResult GetMetrics([FromRoute] TimeSpan fromTime, [FromRoute] TimeSpan toTime )
@@ -53,8 +59,9 @@ namespace MetricsAgent.Controllers
             };
             foreach (var metric in metrics)
             {
-                response.Metrics.Add(new DotNetMetricDto {Time = metric.Time, Value = metric.Value, Id = metric.Id});
-            }
+                response.Metrics.Add(_mapper.Map<DotNetMetricDto>(metric));
+            };
+        
             _logger.LogError("+++ DotNetMetricsController GETALL LOGGER ");
             return Ok(response);
         }
@@ -81,9 +88,13 @@ namespace MetricsAgent.Controllers
         public IActionResult GetById([FromRoute] int id)
         {
             var result = _repository.GetById(id);
+            var response = new DotNetMetricDto();
+
+            _mapper.Map(result, response);
+            
             _logger.LogInformation("+++ DotNetMetricsController GetById LOGGER");
 
-            return Ok(result);
+            return Ok(response);
         }
 
     }

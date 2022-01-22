@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using AutoMapper;
+using Core.DAL.Interfaces;
 using MetricsAgent.DAL;
-using MetricsAgent.Models;
+using MetricsAgent.DAL.Models;
 using MetricsAgent.Requests;
 using MetricsAgent.Responses;
 using Microsoft.Extensions.Logging;
@@ -15,11 +17,13 @@ namespace MetricsAgent.Controllers
     {
         private readonly ILogger<NetworkMetricsController> _logger;
         private readonly IRepository<NetworkMetric> _repository;
+        private readonly IMapper _mapper;
 
-        public NetworkMetricsController(ILogger<NetworkMetricsController> logger, IRepository<NetworkMetric> repository)
+        public NetworkMetricsController(ILogger<NetworkMetricsController> logger, IRepository<NetworkMetric> repository, IMapper mapper)
         {
             _logger = logger;
             _repository = repository;
+            _mapper = mapper;
         }
         [HttpGet("from/{fromTime}/to/{toTime}")]
         
@@ -52,7 +56,7 @@ namespace MetricsAgent.Controllers
             };
             foreach (var metric in metrics)
             {
-                response.Metrics.Add(new NetworkMetricDto() {Time = metric.Time, Value = metric.Value, Id = metric.Id});
+                response.Metrics.Add(_mapper.Map<NetworkMetricDto>(metric));
             }
             _logger.LogError("+++ NetworkMetricsController GETALL LOGGER ");
             return Ok(response);
@@ -80,9 +84,11 @@ namespace MetricsAgent.Controllers
         public IActionResult GetById([FromRoute] int id)
         {
             var result = _repository.GetById(id);
+            var response = new NetworkMetricDto();
+            _mapper.Map(result, response);
             _logger.LogInformation("+++ NetworkMetricsController GetById LOGGER");
 
-            return Ok(result);
+            return Ok(response);
         }
     }
 }

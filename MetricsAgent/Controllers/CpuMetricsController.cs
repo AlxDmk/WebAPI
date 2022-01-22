@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
+using AutoMapper;
+using Core.DAL.Interfaces;
 using MetricsAgent.DAL;
-using MetricsAgent.Models;
+using MetricsAgent.DAL.Models;
 using MetricsAgent.Requests;
 using MetricsAgent.Responses;
+using MetricsAgent.Responses.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
@@ -20,10 +23,13 @@ namespace MetricsAgent.Controllers
         
         private readonly ILogger<CpuMetricsController> _logger;
 
-        public CpuMetricsController(ILogger<CpuMetricsController> logger, IRepository<CpuMetric> repository)
+        private readonly IMapper _mapper;
+
+        public CpuMetricsController(ILogger<CpuMetricsController> logger, IRepository<CpuMetric> repository, IMapper mapper)
         {
             _logger = logger;
             _repository = repository;
+            _mapper = mapper;
         }
 
         
@@ -51,6 +57,7 @@ namespace MetricsAgent.Controllers
         [HttpGet("all")]
         public IActionResult GetAll()
         {
+            
             var metrics = _repository.GetAll();
             var response = new AllCpuMetricsResponse()
             {
@@ -58,8 +65,9 @@ namespace MetricsAgent.Controllers
             };
             foreach (var metric in metrics)
             {
-                response.Metrics.Add(new CpuMetricDto {Time = metric.Time, Value = metric.Value, Id = metric.Id});
+                response.Metrics.Add(_mapper.Map<CpuMetricDto>(metric));
             }
+            
             _logger.LogError("+++ CpuMetricsController GET ALL LOGGER");
             
             return Ok(response);
@@ -87,9 +95,13 @@ namespace MetricsAgent.Controllers
         public IActionResult GetById([FromRoute] int id)
         {
             var result = _repository.GetById(id);
+
+            var response = new CpuMetricDto();
+            _mapper.Map(result,response);
+            
             _logger.LogInformation("+++ CpuMetricsController GetById LOGGER");
 
-            return Ok(result);
+            return Ok(response);
         }
 
     }

@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using AutoMapper;
+using Core.DAL.Interfaces;
 using MetricsAgent.DAL;
-using MetricsAgent.Models;
+using MetricsAgent.DAL.Models;
 using MetricsAgent.Requests;
 using MetricsAgent.Responses;
 using Microsoft.Extensions.Logging;
@@ -16,11 +18,13 @@ namespace MetricsAgent.Controllers
     {
         private readonly ILogger<HddMetricsController> _logger;
         private readonly IRepository<HddMetric> _repository;
+        private readonly IMapper _mapper;
 
-        public HddMetricsController(ILogger<HddMetricsController> logger, IRepository<HddMetric> repository)
+        public HddMetricsController(ILogger<HddMetricsController> logger, IRepository<HddMetric> repository, IMapper mapper)
         {
             _logger = logger;
             _repository = repository;
+            _mapper = mapper;
         }
         
         
@@ -54,7 +58,7 @@ namespace MetricsAgent.Controllers
             };
             foreach (var metric in metrics)
             {
-                response.Metrics.Add(new HddMetricDto() {Time = metric.Time, Value = metric.Value, Id = metric.Id});
+                response.Metrics.Add(_mapper.Map<HddMetricDto>(metric));
             }
             _logger.LogError("+++ HddMetricsController GetAll LOGGER ");
             return Ok(response);
@@ -82,9 +86,11 @@ namespace MetricsAgent.Controllers
         public IActionResult GetById([FromRoute] int id)
         {
             var result = _repository.GetById(id);
+            var response = new HddMetricDto();
+            _mapper.Map(result, response);
             _logger.LogInformation("+++ HddMetricsController GetById LOGGER");
 
-            return Ok(result);
+            return Ok(response);
         }
     }
 }

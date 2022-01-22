@@ -11,8 +11,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using MetricsAgent.DAL;
 using System.Data.SQLite;
+using AutoMapper;
+using Core.DAL.Interfaces;
 using MetricsAgent.Controllers;
-using MetricsAgent.Models;
+using MetricsAgent.DAL.Models;
+using MetricsAgent.DAL.Repositories;
+using MetricsAgent.Mappers;
 
 namespace MetricsAgent
 {
@@ -36,6 +40,11 @@ namespace MetricsAgent
             services.AddScoped<IRepository<NetworkMetric>, NetworkMetricsRepository>();
             services.AddScoped<IRepository<RamMetric>, RamMetricsRepository>();
 
+            var mapperConfiguration = new MapperConfiguration(mp => mp.AddProfile(new
+                MapperProfile()));
+            var mapper = mapperConfiguration.CreateMapper();
+            services.AddSingleton(mapper);
+
 
         }
 
@@ -54,7 +63,7 @@ namespace MetricsAgent
                 // command.CommandText = "DROP TABLE IF EXISTS cpumetrics";
                 // command.ExecuteNonQuery();
         
-                command.CommandText = @"CREATE TABLE IF NOT EXISTS  cpumetrics(id INTEGER PRIMARY KEY , value INT, time INT)";
+                command.CommandText = @"CREATE TABLE IF NOT EXISTS  cpumetrics(id INTEGER PRIMARY KEY , value INT, time BIGINT)";
                 command.ExecuteNonQuery();
                 
                 // command.CommandText = "DROP TABLE IF EXISTS dotnetmetrics";
@@ -66,10 +75,10 @@ namespace MetricsAgent
                 command.CommandText = @"CREATE TABLE IF NOT EXISTS hddmetrics(id INTEGER PRIMARY KEY , value INT, time INT)";
                 command.ExecuteNonQuery();
                 
-                command.CommandText = @"CREATE TABLE IF NOT EXISTS networktmetrics(id INTEGER PRIMARY KEY , value INT, time INT)";
+                command.CommandText = @"CREATE TABLE IF NOT EXISTS networkmetrics(id INTEGER PRIMARY KEY , value INT, time INT)";
                 command.ExecuteNonQuery();
                 
-                command.CommandText = @"CREATE TABLE IF NOT EXISTS ramtmetrics(id INTEGER PRIMARY KEY , value INT, time INT)";
+                command.CommandText = @"CREATE TABLE IF NOT EXISTS rammetrics(id INTEGER PRIMARY KEY , value INT, time INT)";
                 command.ExecuteNonQuery();
             }
         }
