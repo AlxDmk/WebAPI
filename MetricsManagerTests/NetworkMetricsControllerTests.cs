@@ -1,6 +1,7 @@
 ﻿using MetricsManager.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
 
 namespace MetricsManagerTests
@@ -11,7 +12,7 @@ namespace MetricsManagerTests
 
         public NetworkMetricsControllerTests()
         {
-            _controller = new NetworkMetricsController();
+            _controller = new NetworkMetricsController(NullLogger<NetworkMetricsController>.Instance);
         }
         
         [Fact]
