@@ -15,7 +15,8 @@ namespace MetricsManager
     {
         public static void Main(string[] args)
         {
-             var config = new ConfigurationBuilder()
+
+          var config = new ConfigurationBuilder()
             .SetBasePath(System.IO.Directory.GetCurrentDirectory())
             .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
             .Build();
@@ -24,7 +25,7 @@ namespace MetricsManager
 
             CreateHostBuilder(args).Build().Run();
         }
-
+        
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
