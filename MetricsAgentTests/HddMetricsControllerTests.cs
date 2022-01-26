@@ -1,3 +1,4 @@
+
 ﻿using AutoMapper;
 using Core.DAL.Interfaces;
 using MetricsAgent.Controllers;
@@ -20,8 +21,10 @@ public class HddMetricsControllerTests
     {
         var loggerMock = new Mock<ILogger<HddMetricsController>>();
         _repositoryMock = new Mock<IRepository<HddMetric>>();
+
         var mapperMock = new Mock<IMapper>();
         _controller = new HddMetricsController(loggerMock.Object, _repositoryMock.Object, mapperMock.Object);
+
     }
     
     [Fact]

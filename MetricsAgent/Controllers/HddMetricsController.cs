@@ -58,7 +58,9 @@ namespace MetricsAgent.Controllers
             };
             foreach (var metric in metrics)
             {
+
                 response.Metrics.Add(_mapper.Map<HddMetricDto>(metric));
+
             }
             _logger.LogError("+++ HddMetricsController GetAll LOGGER ");
             return Ok(response);
@@ -86,11 +88,13 @@ namespace MetricsAgent.Controllers
         public IActionResult GetById([FromRoute] int id)
         {
             var result = _repository.GetById(id);
+
             var response = new HddMetricDto();
             _mapper.Map(result, response);
             _logger.LogInformation("+++ HddMetricsController GetById LOGGER");
 
             return Ok(response);
+
         }
     }
 }

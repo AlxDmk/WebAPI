@@ -1,3 +1,4 @@
+
 ﻿using AutoMapper;
 using Core.DAL.Interfaces;
 using MetricsAgent.Controllers;
@@ -20,8 +21,10 @@ public class DotNetMetricsControllerTests
     {
         var loggerMock = new Mock<ILogger<DotNetMetricsController>>();
         _repositoryMock = new Mock<IRepository<DotNetMetric>>();
+
         var mapperMock = new Mock<IMapper>();
         _controller = new DotNetMetricsController(loggerMock.Object, _repositoryMock.Object, mapperMock.Object);
+
     }
     
     [Fact]

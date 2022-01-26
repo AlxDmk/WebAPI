@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
+
 using AutoMapper;
 using Core.DAL.Interfaces;
 using MetricsAgent.DAL;
@@ -8,6 +9,7 @@ using MetricsAgent.DAL.Models;
 using MetricsAgent.Requests;
 using MetricsAgent.Responses;
 using MetricsAgent.Responses.Models;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
@@ -23,6 +25,7 @@ namespace MetricsAgent.Controllers
         
         private readonly ILogger<CpuMetricsController> _logger;
 
+
         private readonly IMapper _mapper;
 
         public CpuMetricsController(ILogger<CpuMetricsController> logger, IRepository<CpuMetric> repository, IMapper mapper)
@@ -30,17 +33,21 @@ namespace MetricsAgent.Controllers
             _logger = logger;
             _repository = repository;
             _mapper = mapper;
+
         }
 
         
         [HttpGet("from/{fromTime}/to/{toTime}")]
         public IActionResult GetMetrics([FromRoute] TimeSpan fromTime, [FromRoute] TimeSpan toTime)
+
         {
             _logger.LogError("+++ CpuMetricsController LOGGER");
+
             return Ok();
         }
 
         
+
         [HttpPost("create")]
         public IActionResult Create([FromForm] CpuMetricCreateRequest request)
         {
@@ -57,7 +64,7 @@ namespace MetricsAgent.Controllers
         [HttpGet("all")]
         public IActionResult GetAll()
         {
-            
+
             var metrics = _repository.GetAll();
             var response = new AllCpuMetricsResponse()
             {
@@ -65,9 +72,11 @@ namespace MetricsAgent.Controllers
             };
             foreach (var metric in metrics)
             {
+
                 response.Metrics.Add(_mapper.Map<CpuMetricDto>(metric));
             }
             
+
             _logger.LogError("+++ CpuMetricsController GET ALL LOGGER");
             
             return Ok(response);
@@ -102,6 +111,7 @@ namespace MetricsAgent.Controllers
             _logger.LogInformation("+++ CpuMetricsController GetById LOGGER");
 
             return Ok(response);
+
         }
 
     }

@@ -1,3 +1,4 @@
+
 ﻿using AutoMapper;
 using Core.DAL.Interfaces;
 using MetricsAgent.Controllers;
@@ -20,8 +21,10 @@ public class RamMetricsControllerTests
     {
         var loggerMock = new Mock<ILogger<RamMetricsController>>();
         _repositoryMock = new Mock<IRepository<RamMetric>>();
+
         var mapperMock = new Mock<IMapper>();
         _controller = new RamMetricsController(loggerMock.Object, _repositoryMock.Object, mapperMock.Object);
+
     }
     
     [Fact]

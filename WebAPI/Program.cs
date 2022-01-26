@@ -22,7 +22,8 @@ namespace MetricsManager
             .Build();
 
             NLog.LogManager.Configuration = new NLogLoggingConfiguration(config.GetSection("NLog"));
-            CreateHostBuilder(args).Build().Run();            
+
+            CreateHostBuilder(args).Build().Run(); 
 
         }
         
