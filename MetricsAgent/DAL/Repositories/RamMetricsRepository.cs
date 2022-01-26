@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Linq;
@@ -40,5 +41,13 @@ namespace MetricsAgent.DAL.Repositories
                 new {value = item.Value, time = item.Time.TotalSeconds, id = item.Id});
         
         public void Delete(int id) =>  _connection.Execute("DELETE FROM rammetrics WHERE id = @id",new {id = id});
+        public IList<RamMetric> Select(double fromTime, double toTime) =>
+            _connection.Query<RamMetric>(
+                    "SELECT id, value, time FROM rammetrics WHERE time > @fromTime AND time < @toTime", new
+                    {
+                        fromTime = fromTime,
+                        toTime = toTime
+                    })
+                    .ToList();
     }
 }

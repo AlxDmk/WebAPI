@@ -27,7 +27,7 @@ public class DotNetMetricsControllerTests
     [Fact]
     public void GetMetrics_ReturnOK()
     {
-        var result = _controller.GetMetrics(TimeSpan.Zero, TimeSpan.Zero);
+        var result = _controller.GetMetrics(1643055099, 1643098155);
         Assert.IsAssignableFrom<IActionResult>(result);
     }
     

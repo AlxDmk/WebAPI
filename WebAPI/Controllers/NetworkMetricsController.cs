@@ -16,10 +16,10 @@ namespace MetricsManager.Controllers
             _logger = logger;
         }
         [HttpGet("agent/{agentId}/from/{fromTime}/to/{toTime}")]
-        public IActionResult GetMetricsFromAgent([FromRoute] int agentId, [FromRoute] TimeSpan fromTime, 
-            [FromRoute] TimeSpan toTime)
+        public IActionResult GetMetricsFromAgent([FromRoute] int agentId, [FromRoute] double fromTime, 
+            [FromRoute] double toTime)
         {
-            _logger.LogError("**** NetworkMetricsController LOGGER");
+            _logger.LogInformation("**** NetworkMetricsController LOGGER");
             return Ok();
         }
     }

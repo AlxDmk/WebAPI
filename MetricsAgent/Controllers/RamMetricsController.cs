@@ -3,10 +3,10 @@ using System;
 using System.Collections.Generic;
 using AutoMapper;
 using Core.DAL.Interfaces;
-using MetricsAgent.DAL;
 using MetricsAgent.DAL.Models;
 using MetricsAgent.Requests;
 using MetricsAgent.Responses;
+using MetricsAgent.Responses.Models;
 using Microsoft.Extensions.Logging;
 
 namespace MetricsAgent.Controllers
@@ -27,10 +27,10 @@ namespace MetricsAgent.Controllers
         }
         [HttpGet("from/{fromTime}/to/{toTime}")]
         
-        public IActionResult GetMetrics([FromRoute] TimeSpan fromTime, [FromRoute] TimeSpan toTime )
+        public IActionResult GetMetrics([FromRoute] double fromTime, [FromRoute] double toTime )
         {
             _logger.LogInformation("+++ RamMetricsController");
-            return Ok();
+            return Ok(_repository.Select(fromTime,toTime));
         }
         
         [HttpPost("create")]
@@ -41,7 +41,7 @@ namespace MetricsAgent.Controllers
                 Time = request.Time,
                 Value = request.Value
             });
-            _logger.LogError("+++ RamMetricsController CREATE  LOGGER");
+            _logger.LogInformation("+++ RamMetricsController CREATE  LOGGER");
             return Ok();
         }
 
@@ -58,7 +58,7 @@ namespace MetricsAgent.Controllers
             {
                 response.Metrics.Add(_mapper.Map<RamMetricDto>(metric));
             }
-            _logger.LogError("+++ RamMetricsController GET ALL LOGGER");
+            _logger.LogInformation("+++ RamMetricsController GET ALL LOGGER");
             
             return Ok(response);
         }

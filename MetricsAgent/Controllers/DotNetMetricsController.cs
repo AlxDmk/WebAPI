@@ -30,10 +30,10 @@ namespace MetricsAgent.Controllers
             _mapper = mapper;
         }
         [HttpGet("from/{fromTime}/to/{toTime}")]
-        public IActionResult GetMetrics([FromRoute] TimeSpan fromTime, [FromRoute] TimeSpan toTime )
+        public IActionResult GetMetrics([FromRoute] double fromTime, [FromRoute] double toTime )
         {
-            _logger.LogError("+++ DotNetMetricsController LOGGER ");
-            return Ok();
+            _logger.LogInformation("+++ DotNetMetricsController LOGGER ");
+            return Ok(_repository.Select(fromTime,toTime));
         }
         
         [HttpPost("create")]
@@ -45,7 +45,7 @@ namespace MetricsAgent.Controllers
                 Value = request.Value
                 
             });
-            _logger.LogError("+++ DotNetMetricsController CREATE LOGGER ");
+            _logger.LogInformation("+++ DotNetMetricsController CREATE LOGGER ");
             return Ok();
         }
 
@@ -62,7 +62,7 @@ namespace MetricsAgent.Controllers
                 response.Metrics.Add(_mapper.Map<DotNetMetricDto>(metric));
             };
         
-            _logger.LogError("+++ DotNetMetricsController GETALL LOGGER ");
+            _logger.LogInformation("+++ DotNetMetricsController GETALL LOGGER ");
             return Ok(response);
         }
         

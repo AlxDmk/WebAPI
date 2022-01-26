@@ -22,7 +22,7 @@ namespace MetricsAgent
 
             NLog.LogManager.Configuration = new NLogLoggingConfiguration(config.GetSection("NLog"));
             CreateHostBuilder(args).Build().Run();
-        }
+        } 
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)

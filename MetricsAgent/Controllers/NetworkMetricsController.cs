@@ -7,6 +7,7 @@ using MetricsAgent.DAL;
 using MetricsAgent.DAL.Models;
 using MetricsAgent.Requests;
 using MetricsAgent.Responses;
+using MetricsAgent.Responses.Models;
 using Microsoft.Extensions.Logging;
 
 namespace MetricsAgent.Controllers
@@ -27,10 +28,10 @@ namespace MetricsAgent.Controllers
         }
         [HttpGet("from/{fromTime}/to/{toTime}")]
         
-        public IActionResult GetMetrics([FromRoute] TimeSpan fromTime, [FromRoute] TimeSpan toTime )
+        public IActionResult GetMetrics([FromRoute] double fromTime, [FromRoute] double toTime )
         {
             _logger.LogInformation("+++ NetworkMetricsController LOGGER");
-            return Ok();
+            return Ok(_repository.Select(fromTime,toTime));
         }
         
         [HttpPost("create")]
@@ -42,7 +43,7 @@ namespace MetricsAgent.Controllers
                 Value = request.Value
                 
             });
-            _logger.LogError("+++ NetworkMetricsController CREATE LOGGER ");
+            _logger.LogInformation("+++ NetworkMetricsController CREATE LOGGER ");
             return Ok();
         }
 
@@ -58,7 +59,7 @@ namespace MetricsAgent.Controllers
             {
                 response.Metrics.Add(_mapper.Map<NetworkMetricDto>(metric));
             }
-            _logger.LogError("+++ NetworkMetricsController GETALL LOGGER ");
+            _logger.LogInformation("+++ NetworkMetricsController GETALL LOGGER ");
             return Ok(response);
         }
         

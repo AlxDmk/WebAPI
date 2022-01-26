@@ -1,7 +1,11 @@
 ﻿using MetricsManager.Controllers;
 using Microsoft.AspNetCore.Mvc;
+using MetricsAgent.DAL.Models;
 using System;
+using Core.DAL.Interfaces;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using Moq;
 using Xunit;
 
 namespace MetricsManagerTests
@@ -9,20 +13,19 @@ namespace MetricsManagerTests
     public class DotNetMetricsControllerTests
     {
         private readonly DotNetMetricsController _controller;
+        
 
         public DotNetMetricsControllerTests()
         {
-            _controller = new DotNetMetricsController(NullLogger<DotNetMetricsController>.Instance);
+            var loggerMock = new Mock<ILogger<DotNetMetricsController>>();
+            _controller = new DotNetMetricsController(loggerMock.Object);
         }
         
         [Fact]
         public void GetMetricsFromAgent_ReturnOK()
         {
-          
-            var result = _controller.GetMetricsFromAgent(1, TimeSpan.Zero, TimeSpan.Zero);
-
+            var result = _controller.GetMetricsFromAgent(1, 1643055099, 1643098155);
             Assert.IsAssignableFrom<IActionResult>(result);
-
         }
     }
 }

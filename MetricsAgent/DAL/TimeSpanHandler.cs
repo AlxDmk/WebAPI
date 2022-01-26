@@ -10,6 +10,6 @@ namespace MetricsAgent.DAL
             => parameter.Value = value;
 
         public override TimeSpan Parse(object value)
-        => TimeSpan.FromSeconds((int)value);
+        => TimeSpan.FromSeconds((long)value);
     }
 }

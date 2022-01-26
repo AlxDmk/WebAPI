@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Linq;
@@ -44,5 +45,14 @@ namespace MetricsAgent.DAL.Repositories
             
             _connection.Execute("DELETE FROM networkmetrics WHERE id = @id",new {id = id});
 
+        public IList<NetworkMetric> Select(double fromTime, double toTime) =>
+            _connection.Query<NetworkMetric>(
+                    "SELECT id, value, time FROM networkmetrics WHERE time > @fromTime AND time < @toTime",
+                    new
+                    {
+                        fromTime = fromTime,
+                        toTime = toTime
+                    })
+                    .ToList();
     }
 }

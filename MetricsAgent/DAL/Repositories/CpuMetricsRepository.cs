@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Linq;
@@ -18,24 +19,20 @@ namespace MetricsAgent.DAL.Repositories
                 SqlMapper.AddTypeHandler(new TimeSpanHandler());
         }
         
-        public IList<CpuMetric> GetAll() => 
-            
+        public IList<CpuMetric> GetAll() =>
             _connection.Query<CpuMetric>("SELECT id, time, value FROM cpumetrics").ToList();
 
         
         public CpuMetric GetById(int id) =>
-            
             _connection.QuerySingle<CpuMetric>("SELECT id, time, value FROM cpumetrics WHERE id = @id", 
                 new { id = id });
         
 
         public void Create(CpuMetric item) =>
-        
             _connection.Execute("INSERT INTO cpumetrics (value, time) VALUES(@value, @time)",
                 new {value = item.Value, time = item.Time.TotalSeconds});
         
         public void Update(CpuMetric item) =>
-      
             _connection.Execute("UPDATE cpumetrics SET value = @value, time = @time WHERE id = @id",
                 new
                 {
@@ -45,8 +42,16 @@ namespace MetricsAgent.DAL.Repositories
                 });
         
         public void Delete(int id) =>
-            
             _connection.Execute("DELETE FROM cpumetrics WHERE id = @id",new {id = id});
-        
-    }
+
+
+        public IList<CpuMetric> Select(double fromTime, double toTime) =>
+            _connection.Query<CpuMetric>(
+                "SELECT id, value, time FROM cpumetrics WHERE time > @fromTime AND time < @toTime",
+                new
+                {
+                    fromTime = fromTime,
+                    toTime = toTime
+                })
+                .ToList(); }
 }

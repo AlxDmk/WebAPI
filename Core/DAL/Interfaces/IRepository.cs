@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace Core.DAL.Interfaces
@@ -13,5 +14,6 @@ namespace Core.DAL.Interfaces
         void Update(T item);
         
         void Delete(int id);
+        IList<T> Select(double fromTime, double toTime);
     }
 }

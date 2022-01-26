@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.SQLite;
+﻿using System.Collections.Generic;
 using AutoMapper;
 using Core.DAL.Interfaces;
-using MetricsAgent.DAL;
 using MetricsAgent.DAL.Models;
 using MetricsAgent.Requests;
 using MetricsAgent.Responses;
 using MetricsAgent.Responses.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 
 namespace MetricsAgent.Controllers
@@ -34,10 +30,10 @@ namespace MetricsAgent.Controllers
 
         
         [HttpGet("from/{fromTime}/to/{toTime}")]
-        public IActionResult GetMetrics([FromRoute] TimeSpan fromTime, [FromRoute] TimeSpan toTime)
+        public IActionResult GetMetrics([FromRoute] double fromTime, [FromRoute] double toTime)
         {
-            _logger.LogError("+++ CpuMetricsController LOGGER");
-            return Ok();
+            _logger.LogInformation("+++ CpuMetricsController LOGGER");
+            return Ok(_repository.Select(fromTime, toTime));
         }
 
         
@@ -49,7 +45,7 @@ namespace MetricsAgent.Controllers
                 Time = request.Time,
                 Value = request.Value
             });
-            _logger.LogError("+++ CpuMetricsController CREATE  LOGGER");
+            _logger.LogInformation("+++ CpuMetricsController CREATE  LOGGER");
             return Ok();
         }
 
@@ -68,7 +64,7 @@ namespace MetricsAgent.Controllers
                 response.Metrics.Add(_mapper.Map<CpuMetricDto>(metric));
             }
             
-            _logger.LogError("+++ CpuMetricsController GET ALL LOGGER");
+            _logger.LogInformation("+++ CpuMetricsController GET ALL LOGGER");
             
             return Ok(response);
         }
