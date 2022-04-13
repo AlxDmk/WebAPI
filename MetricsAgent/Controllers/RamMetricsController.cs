@@ -1,8 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+
+using AutoMapper;
+using Core.DAL.Interfaces;
 using MetricsAgent.DAL;
-using MetricsAgent.Models;
+using MetricsAgent.DAL.Models;
+
 using MetricsAgent.Requests;
 using MetricsAgent.Responses;
 using Microsoft.Extensions.Logging;
@@ -15,10 +19,15 @@ namespace MetricsAgent.Controllers
     {
         private readonly ILogger<RamMetricsController> _logger;
         private readonly IRepository<RamMetric> _repository;
-        public RamMetricsController(ILogger<RamMetricsController> logger, IRepository<RamMetric> repository)
+
+        private readonly IMapper _mapper;
+
+        public RamMetricsController(ILogger<RamMetricsController> logger, IRepository<RamMetric> repository, IMapper mapper)
         {
             _logger = logger;
             _repository = repository;
+            _mapper = mapper;
+
         }
         [HttpGet("from/{fromTime}/to/{toTime}")]
         
@@ -37,6 +46,7 @@ namespace MetricsAgent.Controllers
                 Value = request.Value
             });
             _logger.LogError("+++ RamMetricsController CREATE  LOGGER");
+
             return Ok();
         }
 
@@ -51,7 +61,7 @@ namespace MetricsAgent.Controllers
             };
             foreach (var metric in metrics)
             {
-                response.Metrics.Add(new RamMetricDto() {Time = metric.Time, Value = metric.Value, Id = metric.Id});
+                response.Metrics.Add(_mapper.Map<RamMetricDto>(metric));
             }
             _logger.LogError("+++ RamMetricsController GET ALL LOGGER");
             
@@ -76,13 +86,19 @@ namespace MetricsAgent.Controllers
             return Ok();
         }
 
+
         [HttpGet("get/{id}")]
         public IActionResult GetById([FromRoute] int id)
         {
             var result = _repository.GetById(id);
+
+            var response = new RamMetricDto();
+            _mapper.Map(result, response);
+            
             _logger.LogInformation("+++ RamMetricsController GetById LOGGER");
 
-            return Ok(result);
+            return Ok(response);
+
         }
 
     }

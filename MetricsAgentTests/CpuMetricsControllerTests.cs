@@ -1,6 +1,10 @@
-﻿using MetricsAgent.Controllers;
+
+﻿using AutoMapper;
+using Core.DAL.Interfaces;
+using MetricsAgent.Controllers;
 using MetricsAgent.DAL;
-using MetricsAgent.Models;
+using MetricsAgent.DAL.Models;
+
 using MetricsAgent.Responses;
 using Xunit;
 using Microsoft.AspNetCore.Mvc;
@@ -14,16 +18,16 @@ public class CpuMetricsControllerTests
 {
     private readonly CpuMetricsController _controller;
     private readonly Mock<IRepository<CpuMetric>> _repositoryMock;
-   
+
 
     public CpuMetricsControllerTests()
     {
         var loggerMock = new Mock<ILogger<CpuMetricsController>>();
-        _repositoryMock = new Mock<IRepository<CpuMetric>>();
 
-        _controller = new CpuMetricsController(loggerMock.Object, _repositoryMock.Object);
-        
-       
+         _repositoryMock = new Mock<IRepository<CpuMetric>>();
+         var mapperMock = new Mock<IMapper>();
+         _controller = new CpuMetricsController(loggerMock.Object, _repositoryMock.Object, mapperMock.Object);
+
     }
     
     [Fact]
@@ -42,15 +46,14 @@ public class CpuMetricsControllerTests
         _repositoryMock.Verify(repository =>repository.Create(It.IsAny<CpuMetric>()), Times.AtLeastOnce());
     }
 
-    
-    
+
     [Fact]
     public void Update_ShouldCall_Update_From_Repository()
     {
         var result = _controller.Update(new CpuMetric(){ Id = 1, Time = TimeSpan.FromSeconds(1), Value = 20});
         Assert.IsAssignableFrom<IActionResult>(result);
     }
-    
+
     [Fact]
     public void Delete_ShouldCall_Delete_From_Repository()
     {

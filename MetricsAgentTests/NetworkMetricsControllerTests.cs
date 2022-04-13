@@ -1,6 +1,10 @@
-﻿using MetricsAgent.Controllers;
+
+﻿using AutoMapper;
+using Core.DAL.Interfaces;
+using MetricsAgent.Controllers;
 using MetricsAgent.DAL;
-using MetricsAgent.Models;
+using MetricsAgent.DAL.Models;
+
 using Xunit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -18,7 +22,10 @@ public class NetworkMetricsControllerTests
     {
         var loggerMock = new Mock<ILogger<NetworkMetricsController>>();
         _repositoryMock = new Mock<IRepository<NetworkMetric>>();
-        _controller = new NetworkMetricsController(loggerMock.Object, _repositoryMock.Object);
+
+        var mapperMock = new Mock<IMapper>();
+        _controller = new NetworkMetricsController(loggerMock.Object, _repositoryMock.Object, mapperMock.Object);
+
     }
     
     [Fact]

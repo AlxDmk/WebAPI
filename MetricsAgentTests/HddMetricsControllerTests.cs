@@ -1,6 +1,9 @@
-﻿using MetricsAgent.Controllers;
+
+﻿using AutoMapper;
+using Core.DAL.Interfaces;
+using MetricsAgent.Controllers;
 using MetricsAgent.DAL;
-using MetricsAgent.Models;
+using MetricsAgent.DAL.Models;
 using Xunit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -18,8 +21,10 @@ public class HddMetricsControllerTests
     {
         var loggerMock = new Mock<ILogger<HddMetricsController>>();
         _repositoryMock = new Mock<IRepository<HddMetric>>();
-        
-        _controller = new HddMetricsController(loggerMock.Object, _repositoryMock.Object);
+
+        var mapperMock = new Mock<IMapper>();
+        _controller = new HddMetricsController(loggerMock.Object, _repositoryMock.Object, mapperMock.Object);
+
     }
     
     [Fact]
